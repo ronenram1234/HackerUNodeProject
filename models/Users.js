@@ -18,8 +18,8 @@ const userSchema = new Schema({
     select: false,
   },
   image: {
-    url: { type: String, required: true },
-    alt: { type: String, required: true },
+    url: { type: String, default: ""  },
+    alt: { type: String, default: ""  },
   },
 
   address: {

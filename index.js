@@ -26,7 +26,12 @@ app.use(express.json());
 app.use(logger);
 app.use("/users", users);
 app.use("/cards", cards);
+app.use("*", (req, res) => {
+  res.status(404).json({ error: "Illegal path - Route not found" });
+});
 
-expressListRoutes(app);
+
+
+ expressListRoutes(app);
 
 app.listen(port, () => console.log(`👍port started ${port}⭐`));

@@ -27,10 +27,27 @@ const cardSchema = new Schema({
       houseNumber: { type: Number, required: true },
       zip: { type: String }
     },
-    bizNumber: { type: Number,  required: true },
+    bizNumber: { type: Number,  unique:true },
     likes: [{ type: Schema.Types.ObjectId }], // Array of user IDs who liked the card
 
     createdAt: { type: Date, default: Date.now, immutable: true }
+  });
+
+//   ensur biznumber uniqness for new card
+  cardSchema.pre("save", async function (next) {
+    if (!this.isNew) return next();
+    if (!this.bizNumber) {
+      try {
+        const lastCard = await this.constructor.findOne().sort({ bizNumber: -1 });
+        this.bizNumber = lastCard ? lastCard.bizNumber + 1 : 100; 
+        next();
+      } catch (error) {
+        console.log("pre save error")
+        next(error);
+      }
+    } else {
+      next();
+    }
   });
 
 const Card = model("cards", cardSchema);
