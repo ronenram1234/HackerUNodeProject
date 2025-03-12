@@ -1,0 +1,46 @@
+const { Schema, model } = require("mongoose");
+const userSchema = new Schema({
+  name: {
+    first: { type: String, required: true },
+    middle: { type: String },
+    last: { type: String, required: true },
+  },
+  phone: {
+    type: String,
+    required: true,
+    match: [
+      /^05[0-9]-\d{7}$/,
+      "Please enter a valid Israeli mobile phone number (e.g., 053-1112222)",
+    ],
+  },
+  email: { type: String, required: true, unique: true },
+  password: {
+    type: String,
+    required: true,
+    minlength: 7,
+    select: false,
+  },
+  image: {
+    url: { type: String, required: true },
+    alt: { type: String, required: true },
+  },
+
+  address: {
+    state: { type: String, default: "" },
+    country: { type: String, required: true },
+    city: { type: String, required: true },
+    street: { type: String, required: true },
+    houseNumber: { type: Number, required: true },
+    zip: { type: Number },
+  },
+  isAdmin: { type: Boolean, default: false },
+  isBusiness: { type: Boolean, default: false },
+  createdAt: {
+    type: Date,
+    default: Date.now, 
+    immutable: true, 
+  },
+});
+
+const User = model("users", userSchema);
+module.exports = User;
