@@ -8,10 +8,7 @@ const userSchema = new Schema({
   phone: {
     type: String,
     required: true,
-    match: [
-      /^05[0-9]-\d{7}$/,
-      "Please enter a valid Israeli mobile phone number (e.g., 053-1112222)",
-    ],
+   
   },
   email: { type: String, required: true, unique: true },
   password: {
