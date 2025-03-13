@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "ndb index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "initDB": "node insertRecords"
   },
   "author": "",
   "license": "ISC",

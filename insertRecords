@@ -1,0 +1,160 @@
+const axios = require("axios");
+const readline = require("readline");
+const mongoose = require("mongoose");
+const User = require("./models/Users");
+const Card = require("./models/Cards");
+// require("dotenv").config({ path: "../.env" });
+require("dotenv").config();
+
+const port = process.env.PORT || 5000;
+console.log(port, __dirname);
+const API_BASE_URL = `http://localhost:${port}`;
+
+// Connect to MongoDB
+const connectToMongoDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB);
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+    process.exit(1); // Exit if unable to connect
+  }
+};
+
+// Create readline interface
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const askQuestion = (question) => {
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      resolve(answer);
+    });
+  });
+};
+
+const registerUser = async (userData) => {
+  try {
+    // Ask for  confirmation
+    const answer = await askQuestion(
+      "Are you sure you want to delete all existing users? (yes/no): "
+    );
+
+    if (answer.toLowerCase() === "yes") {
+      console.log("Deleting all users...");
+      try {
+        await User.deleteMany({}); // Delete all documents in the users collection
+        console.log("All users deleted successfully.");
+      } catch (error) {
+        console.error("Error deleting users from MongoDB:", error.message);
+      }
+    } else {
+      console.log("Operation canceled. No users were deleted.");
+    }
+
+    // Proceed to register a new user
+    try {
+      const response = await axios.post(`${API_BASE_URL}/users`, userData);
+      console.log("User created successfully:");
+    } catch (error) {
+      console.error(
+        "Error creating user:",
+        error.response?.data || error.message
+      );
+    }
+  } catch (error) {
+    console.error("Unexpected error:", error.message);
+  } finally {
+    // Close readline interface
+    
+  }
+};
+
+const createCard = async (cardData) => {
+  const answer = await askQuestion(
+    "Are you sure you want to delete all existing cards? (yes/no): "
+  );
+
+  if (answer.toLowerCase() === "yes") {
+    console.log("Deleting all cards...");
+    try {
+      await Card.deleteMany({}); // Delete all documents in the users collection
+      console.log("All cards deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting cards from MongoDB:", error.message);
+    }
+  } else {
+    console.log("Operation canceled. No cards were deleted.");
+  }
+
+  try {
+    const response = await axios.post(`${API_BASE_URL}/cards`, cardData);
+    console.log("Card created successfully:");
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error creating card:",
+      error.response?.data || error.message
+    );
+    // throw error;
+  }
+};
+
+// Example usage:
+const userPayload = {
+  name: {
+    first: "first",
+    middle: "",
+    last: "user",
+  },
+  isBusiness: true,
+  phone: "050-0000000",
+  email: "first@gmail.com",
+  password: "Aa1234!",
+  address: {
+    state: "",
+    country: "israel",
+    city: "tel-aviv",
+    street: "magnive",
+    houseNumber: 5,
+  },
+  image: {
+    url: "",
+    alt: "",
+  },
+};
+
+const cardPayload = {
+  title: "test123",
+  subtitle: "testing",
+  description: "testing 123",
+  phone: "050-0000000",
+  email: "testing@gmail.com",
+  web: "https://www.test.co.il",
+  image: {
+    url: "",
+    alt: "",
+  },
+  address: {
+    state: "",
+    country: "test",
+    city: "test",
+    street: "test",
+    houseNumber: 3,
+    zip: "0",
+  },
+};
+
+// Call the functions to create a user and a card
+(async () => {
+  await connectToMongoDB(); // Ensures connection is completed first
+  await registerUser(userPayload); // Waits for user input before proceeding
+  await createCard(cardPayload);
+  rl.close();
+  mongoose.connection.close();
+
+})();
+
+module.exports = { registerUser, createCard };
