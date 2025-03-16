@@ -23,3 +23,5 @@ Thumbs.db
 # Temporary files
 tmp/
 *.tmp
+nodeProj.cards.json
+nodeProj.users.json

@@ -137,18 +137,22 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", auth, async (req, res) => {
   try {
     // verfiy user change only his own record
-    // const user = await User.findById(req.payload._id);
+    const user = await User.findById(req.payload._id);
+    if (!user) return res.status(404).send("No such user");
+
     if (req.payload._id !== req.params.id)
       return res.status(400).send("User can change only his own data");
+    req.body.password = user.password;
+    req.body.email = user.email;
 
     const { error } = registerSchema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     // check if product exists + update
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const newUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     }).select("-password");
-    if (!user) return res.status(404).send("No such user");
+
     res.status(200).send(user);
   } catch (err) {
     res.status(400).send(`Invalide request - ${err.message}`);
@@ -177,24 +181,27 @@ router.patch("/:id", auth, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
   try {
-    const reqUser = await User.findById(req.params.id).select("-password");
+    const reqUser = await User.findById(req.payload._id).select("-password");
 
     if (!reqUser) {
       return res.status(404).send("User doesn't exist");
     }
 
     // Ensure only the user themselves or an admin can delete
-    if (!reqUser.isAdmin && req.payload._id !== req.params.id) {
-      return res
-        .status(403)
-        .send(
-          "Unauthorized request - only the user or an admin can delete this account"
-        );
-    }
+   
+    
 
-    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!(reqUser.isAdmin || req.payload._id === req.params.id)) {
+        return res
+          .status(403)
+          .send(
+            "Unauthorized request - only a user can delete their own account, or an admin can delete any account"
+          );
+      }
 
-    res.status(200).send("Product has been deleted successfully!");
+    const product = await User.findByIdAndDelete(req.params.id);
+
+    res.status(200).send("User has been deleted successfully!");
   } catch (err) {
     res.status(400).send(`Invalide request - ${err.message}`);
   }
