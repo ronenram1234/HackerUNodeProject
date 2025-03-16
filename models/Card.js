@@ -28,8 +28,9 @@ const cardSchema = new Schema({
       zip: { type: String }
     },
     bizNumber: { type: Number,  unique:true },
-    likes: [{ type: Schema.Types.ObjectId }], // Array of user IDs who liked the card
+    likes: [{ type: Schema.Types.ObjectId, ref: "User" }], // Array of user IDs who liked the card
 
+    user_id: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Owner of the card
     createdAt: { type: Date, default: Date.now, immutable: true }
   });
 

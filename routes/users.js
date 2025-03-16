@@ -62,7 +62,7 @@ router.post("/", async (req, res) => {
 
     const newUser = await user.save();
 
-    return res.status(200).send(`post / sucessful ${newUser}`);
+    return res.status(200).send(newUser);
   } catch (err) {
     console.log(err.message);
     res.status(400).send(`Invalide request - ${err.message}`);

@@ -1,7 +1,7 @@
 const express=require("express")
 const router=express.Router()
-const User = require("../models/Users");
-const Card = require("../models/Cards");
+const User = require("../models/User");
+const Card = require("../models/Card");
 const bcrypt=require("bcrypt")
 const Joi = require("Joi");
 
@@ -37,6 +37,7 @@ const newCardSchema = Joi.object({
   
     // bizNumber: Joi.number().optional(),
     likes: Joi.array().items(Joi.string()).optional(),     
+    user_id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
     createdAt: Joi.date().default(() => new Date()),
 
   });

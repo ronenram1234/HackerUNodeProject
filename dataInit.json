@@ -10,7 +10,7 @@
         "isAdmin": false,
         "phone": "050-3333333",
         "email": "alice.johnson@gmail.com",
-        "password": "Cc1234!",
+        "password": "pass1234",
         "address": {
           "state": "",
           "country": "Israel",
@@ -33,7 +33,7 @@
         "isAdmin": false,
         "phone": "050-4444444",
         "email": "david.brown@gmail.com",
-        "password": "Dd5678!",
+        "password": "pass1234!",
         "address": {
           "state": "",
           "country": "Israel",
@@ -56,7 +56,7 @@
         "isAdmin": true,
         "phone": "050-5555555",
         "email": "emma.davis@gmail.com",
-        "password": "Ee9876!",
+        "password": "pass1234!",
         "address": {
           "state": "",
           "country": "Israel",
@@ -72,7 +72,7 @@
     ],
     "cards": [
       {
-        "title": "Tech Solutions",
+        "title": "Tech  Solutions",
         "subtitle": "Software Development",
         "description": "Custom software solutions for businesses",
         "phone": "050-6666666",
