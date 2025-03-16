@@ -110,7 +110,7 @@ router.get("/", auth, async (req, res) => {
     if (!user) return res.status(404).send("No such user");
 
     if (!user.isAdmin) return res.status(400).send("User is not Admin");
-    const allUsers = await User.find();
+    const allUsers = await User.find().select("-password");
 
     return res.status(200).send(allUsers);
   } catch (err) {
@@ -118,34 +118,83 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+// any register user ask for retrieve use by user_id
 router.get("/:id", async (req, res) => {
   try {
-    return res.status(200).send("get /:id sucessful");
+    // const user = await User.findById(req.payload._id);
+    // if (!user) return res.status(404).send("No such user");
+
+    const reqUser = await User.findById(req.params.id).select("-password");
+    if (!reqUser) return res.status(404).send("No such user");
+
+    return res.status(200).send(reqUser);
   } catch (err) {
     res.status(400).send(`Invalide request - ${err.message}`);
   }
 });
 
-// get user
-router.put("/:id", async (req, res) => {
+// Edit  user
+router.put("/:id", auth, async (req, res) => {
   try {
-    return res.status(200).send("put /:id sucessful");
+    // verfiy user change only his own record
+    // const user = await User.findById(req.payload._id);
+    if (req.payload._id !== req.params.id)
+      return res.status(400).send("User can change only his own data");
+
+    const { error } = registerSchema.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    // check if product exists + update
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    }).select("-password");
+    if (!user) return res.status(404).send("No such user");
+    res.status(200).send(user);
   } catch (err) {
     res.status(400).send(`Invalide request - ${err.message}`);
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", auth, async (req, res) => {
   try {
-    return res.status(200).send("patch /:id sucessful");
+    if (req.payload._id !== req.params.id)
+      return res.status(400).send("User can change only his own data");
+    if (!Object.prototype.hasOwnProperty.call(req.body, "isBusiness")) {
+      return res.status(400).send("Missing isBusiness field change");
+    }
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { isBusiness: req.body.isBusiness },
+      { new: true }
+    ).select("-password");
+    console.log(user);
+    if (!user) return res.status(400).send("No such user");
+    res.status(200).send(user);
   } catch (err) {
     res.status(400).send(`Invalide request - ${err.message}`);
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
-    return res.status(200).send("delete /:id sucessful");
+    const reqUser = await User.findById(req.params.id).select("-password");
+
+    if (!reqUser) {
+      return res.status(404).send("User doesn't exist");
+    }
+
+    // Ensure only the user themselves or an admin can delete
+    if (!reqUser.isAdmin && req.payload._id !== req.params.id) {
+      return res
+        .status(403)
+        .send(
+          "Unauthorized request - only the user or an admin can delete this account"
+        );
+    }
+
+    const product = await Product.findByIdAndDelete(req.params.id);
+
+    res.status(200).send("Product has been deleted successfully!");
   } catch (err) {
     res.status(400).send(`Invalide request - ${err.message}`);
   }
