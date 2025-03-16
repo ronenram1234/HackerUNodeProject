@@ -5,6 +5,7 @@ const Card = require("../models/Card");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const auth = require("../middlewares/auth");
 
 // register
 const registerSchema = Joi.object({
@@ -39,6 +40,7 @@ const registerSchema = Joi.object({
   isAdmin: Joi.boolean().default(false), // Default value
   isBusiness: Joi.boolean().default(false),
 });
+
 router.post("/", async (req, res) => {
   try {
     console.log(req.body);
@@ -70,6 +72,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+// login
 const loginSchema = Joi.object({
   email: Joi.string().required().min(2).email(),
   password: Joi.string().required().min(8),
@@ -100,9 +103,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+// get all users
+router.get("/", auth, async (req, res) => {
   try {
-    return res.status(200).send("get / sucessful");
+    const user = await User.findById(req.payload._id);
+    if (!user) return res.status(404).send("No such user");
+
+    if (!user.isAdmin) return res.status(400).send("User is not Admin");
+    const allUsers = await User.find();
+
+    return res.status(200).send(allUsers);
   } catch (err) {
     res.status(400).send(`Invalide request - ${err.message}`);
   }
@@ -116,6 +126,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// get user
 router.put("/:id", async (req, res) => {
   try {
     return res.status(200).send("put /:id sucessful");
