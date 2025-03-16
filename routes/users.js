@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/Users");
-const Card = require("../models/Cards");
-const Joi = require("Joi");
-const bcrypt=require("bcrypt")
+const User = require("../models/User");
+const Card = require("../models/Card");
+const Joi = require("joi");
+const bcrypt = require("bcrypt");
 
 // register
 const registerSchema = Joi.object({
@@ -14,7 +14,7 @@ const registerSchema = Joi.object({
   }).required(),
 
   phone: Joi.string()
-  .pattern(/^[0-9\- ]{10,15}$/) 
+    .pattern(/^[0-9\- ]{10,15}$/)
     .required(),
 
   email: Joi.string().email().required(),
@@ -40,7 +40,7 @@ const registerSchema = Joi.object({
 });
 router.post("/", async (req, res) => {
   try {
-      console.log(req.body);
+    console.log(req.body);
 
     // check input validation
     const { error } = await registerSchema.validateAsync(req.body);
@@ -62,10 +62,9 @@ router.post("/", async (req, res) => {
 
     const newUser = await user.save();
 
-
     return res.status(200).send(`post / sucessful ${newUser}`);
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
     res.status(400).send(`Invalide request - ${err.message}`);
   }
 });
