@@ -48,11 +48,7 @@ const insertUsers = async (users) => {
         console.log(`User ${user.name.first} created successfully.`);
         if (!businessUserId && user.isBusiness) {
           businessUserId = response.data._id; // Get buisness ID 
-          console.log("businessUserId - ",businessUserId)
-          console.log("-----------------")
-          // console.log(response.data._id?.toString())
-          // console.log("-----------------")
-          // console.log(response.data)
+
         }
       } catch (error) {
         console.error(
@@ -98,7 +94,7 @@ const insertCards = async (cards, businessUserId) => {
   await connectToMongoDB(); // Ensure MongoDB connection is established
   const { users, cards } = readDataFile(); // Read JSON data
   const businessUserId = await insertUsers(users);
-  console.log("main businessUserId - ", businessUserId)
+  console.log("businessUserId - ", businessUserId)
   await insertCards(cards, businessUserId);
   mongoose.connection.close();
 })();

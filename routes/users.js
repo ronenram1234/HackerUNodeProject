@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Card = require("../models/Card");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // register
 const registerSchema = Joi.object({
@@ -69,11 +70,33 @@ router.post("/", async (req, res) => {
   }
 });
 
+const loginSchema = Joi.object({
+  email: Joi.string().required().min(2).email(),
+  password: Joi.string().required().min(8),
+});
+
 router.post("/login", async (req, res) => {
   try {
-    return res.status(200).send("post /login sucessful");
-  } catch (err) {
-    res.status(400).send(`Invalide request - ${err.message}`);
+    // 1. body validation
+    const { error } = loginSchema.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    // 2. check if user exists
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send("Email or password are incorrect");
+
+    // 3. compare the password
+    const result = await bcrypt.compare(req.body.password, user.password);
+    if (!result) return res.status(400).send("Email or password are incorrect");
+
+    // 4. create token
+    const token = jwt.sign(
+      { _id: user._id, isBusiness: user.isBusiness, isAdmin: user.isAdmin },
+      process.env.JWTKEY
+    );
+    res.status(200).send(token);
+  } catch (error) {
+    res.status(400).send(error);
   }
 });
 
