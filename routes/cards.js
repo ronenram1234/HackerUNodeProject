@@ -139,8 +139,10 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
+
 router.patch("/:id", auth, async (req, res) => {
   try {
+
     let card
     try {
       card = await Card.findById(req.params.id);
@@ -152,6 +154,7 @@ router.patch("/:id", auth, async (req, res) => {
 
     // add new like
     card.likes.push(req.payload._id);
+
 
     const updateCard = await Card.findByIdAndUpdate(req.params.id, card, {
       new: true,
@@ -189,6 +192,37 @@ router.delete("/:id", auth, async (req, res) => {
     }
 
     const updateCard = await Card.findByIdAndDelete(req.params.id, {
+      new: true,
+    });
+
+    return res.status(200).send(updateCard);
+  } catch (err) {
+    res.status(400).send(`Invalide request - ${err.message}`);
+  }
+});
+
+// Bonus 1 - update bizNumber
+router.patch("/bizNumber/:id", auth, async (req, res) => {
+  try {
+    let card
+    if (!req.payload.isAdmin) return res.status(400).send("only admin can update bizNumber");
+    try {
+      card = await Card.findById(req.params.id);
+    } catch (err) {
+      return res.status(400).send("No card found for requested params Id");
+    }
+
+    if (!card) return res.status(400).send("No cards found");
+
+    if (!req.body.bizNumber) return res.status(400).send("Missing new bizNumber");
+    // check if bizNumber alreay occupied
+    const cardRecords= await Card.findOne({bizNumber: req.body.bizNumber})
+    // console.log(cardRecords,cardRecords._id, cardRecords.bizNumber  )
+    if (cardRecords) return res.status(400).send("bizNumber already being used");
+    
+    card.bizNumber= req.body.bizNumber
+
+    const updateCard = await Card.findByIdAndUpdate(req.params.id, card, {
       new: true,
     });
 
