@@ -2,10 +2,12 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Card = require("../models/Card");
+const Login = require("../models/Login");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/auth");
+const {recordLoginFailures, checkFailures} = require("../utils/loginTable");
 
 // register
 const registerSchema = Joi.object({
@@ -78,6 +80,8 @@ const loginSchema = Joi.object({
   password: Joi.string().required().min(8),
 });
 
+
+
 router.post("/login", async (req, res) => {
   try {
     // 1. body validation
@@ -88,15 +92,34 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send("Email or password are incorrect");
 
+    const count = await Login.countDocuments({
+      user_id: user._id,
+    });
+
+    // Bonus 3 handle 3 failures more in the last 24 hours
+    if (count === 3) {
+      try {
+        await checkFailures(user._id); 
+      } catch (error) {
+        return res.status(400).send(error.message); 
+      }
+    }
+
     // 3. compare the password
     const result = await bcrypt.compare(req.body.password, user.password);
-    if (!result) return res.status(400).send("Email or password are incorrect");
+    if (!result) {
+      recordLoginFailures(user._id);
+      return res.status(400).send("Email or password are incorrect");
+    }
 
     // 4. create token
     const token = jwt.sign(
       { _id: user._id, isBusiness: user.isBusiness, isAdmin: user.isAdmin },
       process.env.JWTKEY
     );
+    if (!token) {
+      throw new Error("Token generation failed");
+    }
     res.status(200).send(token);
   } catch (error) {
     res.status(400).send(error);
@@ -106,9 +129,9 @@ router.post("/login", async (req, res) => {
 // get all users
 router.get("/", auth, async (req, res) => {
   try {
-    let user
+    let user;
     try {
-       user = await User.findById(req.payload._id);
+      user = await User.findById(req.payload._id);
     } catch (err) {
       return res.status(400).send("User id issue");
     }
@@ -127,9 +150,9 @@ router.get("/", auth, async (req, res) => {
 // any register user ask for retrieve use by user_id
 router.get("/:id", async (req, res) => {
   try {
-    let reqUser
+    let reqUser;
     try {
-       reqUser = await User.findById(req.params.id).select("-password");
+      reqUser = await User.findById(req.params.id).select("-password");
     } catch (err) {
       return res.status(400).send("User params id issue");
     }
@@ -145,9 +168,9 @@ router.get("/:id", async (req, res) => {
 // Edit  user
 router.put("/:id", auth, async (req, res) => {
   try {
-    let user
+    let user;
     try {
-       user = await User.findById(req.payload._id);
+      user = await User.findById(req.payload._id);
     } catch (err) {
       return res.status(400).send("User params id issue");
     }
@@ -196,9 +219,9 @@ router.patch("/:id", auth, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
   try {
-    let reqUser
-        try {
-       reqUser = await User.findById(req.params.id).select("-password");
+    let reqUser;
+    try {
+      reqUser = await User.findById(req.params.id).select("-password");
       if (!reqUser) {
         return res.status(404).send("User doesn't exist");
       }
@@ -206,9 +229,8 @@ router.delete("/:id", auth, async (req, res) => {
       return res.status(400).send("User params id issue");
     }
 
-
     // The registered user or admin can delete user
-    
+
     if (!(req.payload.isAdmin || req.payload._id === req.params.id)) {
       return res
         .status(403)
