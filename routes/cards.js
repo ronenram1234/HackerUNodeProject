@@ -82,8 +82,9 @@ router.get("/", async (req, res) => {
 // get all my cards
 router.get("/my-cards", auth, async (req, res) => {
   try {
+    let cards;
     try {
-      const cards = await Card.find({ user_id: req.payload._id });
+      cards = await Card.find({ user_id: req.payload._id });
     } catch (err) {
       return res.status(400).send("No cards found for requested user");
     }
@@ -97,8 +98,9 @@ router.get("/my-cards", auth, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
+    let cards
     try {
-      const cards = await Card.findById(req.params.id);
+      cards = await Card.findById(req.params.id);
     } catch (err) {
       return res.status(400).send("No card found for requested params Id");
     }
@@ -112,8 +114,9 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   try {
+    let card
     try {
-      const card = await Card.findById(req.params.id);
+       card = await Card.findById(req.params.id);
     } catch (err) {
       return res.status(400).send("No card found for requested params Id");
     }
@@ -138,8 +141,9 @@ router.put("/:id", auth, async (req, res) => {
 
 router.patch("/:id", auth, async (req, res) => {
   try {
+    let card
     try {
-      const card = await Card.findById(req.params.id);
+      card = await Card.findById(req.params.id);
     } catch (err) {
       return res.status(400).send("No card found for requested params Id");
     }
@@ -162,17 +166,21 @@ router.patch("/:id", auth, async (req, res) => {
 router.delete("/:id", auth, async (req, res) => {
   try {
     // The user who created the card or admin
-    let card={}
+    let card = {};
     try {
       card = await Card.findById(req.params.id);
     } catch (err) {
       return res.status(400).send("No card found - check params Id");
     }
 
-    if (!card) 
-      return res.status(400).send("No card found");
+    if (!card) return res.status(400).send("No card found");
 
-    if (!(req.payload.isAdmin || req.payload._id.toString() === card.user_id.toString())) {
+    if (
+      !(
+        req.payload.isAdmin ||
+        req.payload._id.toString() === card.user_id.toString()
+      )
+    ) {
       return res
         .status(403)
         .send(

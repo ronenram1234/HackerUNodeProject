@@ -106,8 +106,9 @@ router.post("/login", async (req, res) => {
 // get all users
 router.get("/", auth, async (req, res) => {
   try {
+    let user
     try {
-      const user = await User.findById(req.payload._id);
+       user = await User.findById(req.payload._id);
     } catch (err) {
       return res.status(400).send("User id issue");
     }
@@ -126,8 +127,9 @@ router.get("/", auth, async (req, res) => {
 // any register user ask for retrieve use by user_id
 router.get("/:id", async (req, res) => {
   try {
+    let reqUser
     try {
-      const reqUser = await User.findById(req.params.id).select("-password");
+       reqUser = await User.findById(req.params.id).select("-password");
     } catch (err) {
       return res.status(400).send("User params id issue");
     }
@@ -143,8 +145,9 @@ router.get("/:id", async (req, res) => {
 // Edit  user
 router.put("/:id", auth, async (req, res) => {
   try {
+    let user
     try {
-      const user = await User.findById(req.payload._id);
+       user = await User.findById(req.payload._id);
     } catch (err) {
       return res.status(400).send("User params id issue");
     }
@@ -193,19 +196,20 @@ router.patch("/:id", auth, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
   try {
-    try {
-      const reqUser = await User.findById(req.payload._id).select("-password");
+    let reqUser
+        try {
+       reqUser = await User.findById(req.params.id).select("-password");
+      if (!reqUser) {
+        return res.status(404).send("User doesn't exist");
+      }
     } catch (err) {
       return res.status(400).send("User params id issue");
     }
 
-    if (!reqUser) {
-      return res.status(404).send("User doesn't exist");
-    }
 
-    // The registered user or admin
-
-    if (!(reqUser.isAdmin || req.payload._id === req.params.id)) {
+    // The registered user or admin can delete user
+    
+    if (!(req.payload.isAdmin || req.payload._id === req.params.id)) {
       return res
         .status(403)
         .send(
@@ -213,9 +217,11 @@ router.delete("/:id", auth, async (req, res) => {
         );
     }
 
-    const product = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findByIdAndDelete(req.params.id, {
+      new: true,
+    });
 
-    res.status(200).send("User has been deleted successfully!");
+    res.status(200).send(user);
   } catch (err) {
     res.status(400).send(`Invalide request - ${err.message}`);
   }
