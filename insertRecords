@@ -51,10 +51,7 @@ const insertUsers = async (users) => {
 
         }
       } catch (error) {
-        console.error(
-          `Error creating user ${user.name.first}:`,
-          error.response?.data || error.message
-        );
+        console.log(`Error creating user ${user.name.first}:`, error);
       }
     }
     return businessUserId;
@@ -62,6 +59,7 @@ const insertUsers = async (users) => {
     console.error("Error handling users:", error);
   }
 };
+
 
 // Delete all cards and insert new ones
 const insertCards = async (cards, businessUserId) => {

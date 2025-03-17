@@ -34,7 +34,6 @@ const CardSchema = Joi.object({
     zip: Joi.number().optional(),
   }).required(),
 
-  // bizNumber: Joi.number().optional(),
   likes: Joi.array().items(Joi.string()).optional(),
   bizNumber: { type: Number, unique: true },
 
@@ -50,6 +49,7 @@ router.post("/", auth, async (req, res) => {
       return res.status(400).send("Card details are missing");
     }
 
+    // Check for business user
     if (!req.payload.isBusiness)
       return res.status(400).send("only Business user can create new card");
     req.body.user_id = req.payload._id;
@@ -82,7 +82,12 @@ router.get("/", async (req, res) => {
 // get all my cards
 router.get("/my-cards", auth, async (req, res) => {
   try {
-    const cards = await Card.find({ user_id: req.payload._id });
+    try {
+      const cards = await Card.find({ user_id: req.payload._id });
+    } catch (err) {
+      return res.status(400).send("No cards found for requested user");
+    }
+
     if (!cards) return res.status(400).send("No cards found");
     return res.status(200).send(cards);
   } catch (err) {
@@ -92,7 +97,12 @@ router.get("/my-cards", auth, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const cards = await Card.findById(req.params.id);
+    try {
+      const cards = await Card.findById(req.params.id);
+    } catch (err) {
+      return res.status(400).send("No card found for requested params Id");
+    }
+
     if (!cards) return res.status(400).send("No cards found");
     return res.status(200).send(cards);
   } catch (err) {
@@ -102,9 +112,14 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   try {
-    const card = await Card.findById(req.params.id);
+    try {
+      const card = await Card.findById(req.params.id);
+    } catch (err) {
+      return res.status(400).send("No card found for requested params Id");
+    }
     if (!card) return res.status(400).send("No cards found");
-  
+
+    // The user who created the card
     if (req.payload._id.toString() !== card.user_id.toString())
       return res.status(400).send("Only card owner can change card data");
 
@@ -121,16 +136,22 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
-router.patch("/:id",  auth, async (req, res) => {
+router.patch("/:id", auth, async (req, res) => {
   try {
-    const card = await Card.findById(req.params.id);
+    try {
+      const card = await Card.findById(req.params.id);
+    } catch (err) {
+      return res.status(400).send("No card found for requested params Id");
+    }
+
     if (!card) return res.status(400).send("No cards found");
-    card.likes.push(req.payload._id)
+
+    // add new like
+    card.likes.push(req.payload._id);
 
     const updateCard = await Card.findByIdAndUpdate(req.params.id, card, {
       new: true,
     });
-
 
     return res.status(200).send(updateCard);
   } catch (err) {
@@ -138,21 +159,30 @@ router.patch("/:id",  auth, async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
+    // The user who created the card or admin
+    let card={}
+    try {
+      card = await Card.findById(req.params.id);
+    } catch (err) {
+      return res.status(400).send("No card found - check params Id");
+    }
 
+    if (!card) 
+      return res.status(400).send("No card found");
 
-    need to complete the logic for admin and card owner
-
-    
-    const card = await Card.findById(req.params.id);
-    if (!card) return res.status(400).send("No cards found");
-    
+    if (!(req.payload.isAdmin || req.payload._id.toString() === card.user_id.toString())) {
+      return res
+        .status(403)
+        .send(
+          "Unauthorized request - only a user can delete their own account, or an admin can delete any account"
+        );
+    }
 
     const updateCard = await Card.findByIdAndDelete(req.params.id, {
       new: true,
     });
-
 
     return res.status(200).send(updateCard);
   } catch (err) {

@@ -106,7 +106,12 @@ router.post("/login", async (req, res) => {
 // get all users
 router.get("/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.payload._id);
+    try {
+      const user = await User.findById(req.payload._id);
+    } catch (err) {
+      return res.status(400).send("User id issue");
+    }
+
     if (!user) return res.status(404).send("No such user");
 
     if (!user.isAdmin) return res.status(400).send("User is not Admin");
@@ -121,10 +126,12 @@ router.get("/", auth, async (req, res) => {
 // any register user ask for retrieve use by user_id
 router.get("/:id", async (req, res) => {
   try {
-    // const user = await User.findById(req.payload._id);
-    // if (!user) return res.status(404).send("No such user");
+    try {
+      const reqUser = await User.findById(req.params.id).select("-password");
+    } catch (err) {
+      return res.status(400).send("User params id issue");
+    }
 
-    const reqUser = await User.findById(req.params.id).select("-password");
     if (!reqUser) return res.status(404).send("No such user");
 
     return res.status(200).send(reqUser);
@@ -136,10 +143,15 @@ router.get("/:id", async (req, res) => {
 // Edit  user
 router.put("/:id", auth, async (req, res) => {
   try {
-    // verfiy user change only his own record
-    const user = await User.findById(req.payload._id);
+    try {
+      const user = await User.findById(req.payload._id);
+    } catch (err) {
+      return res.status(400).send("User params id issue");
+    }
+
     if (!user) return res.status(404).send("No such user");
 
+    // verfiy user change only his own record
     if (req.payload._id !== req.params.id)
       return res.status(400).send("User can change only his own data");
     req.body.password = user.password;
@@ -181,23 +193,25 @@ router.patch("/:id", auth, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
   try {
-    const reqUser = await User.findById(req.payload._id).select("-password");
+    try {
+      const reqUser = await User.findById(req.payload._id).select("-password");
+    } catch (err) {
+      return res.status(400).send("User params id issue");
+    }
 
     if (!reqUser) {
       return res.status(404).send("User doesn't exist");
     }
 
-    // Ensure only the user themselves or an admin can delete
-   
-    
+    // The registered user or admin
 
     if (!(reqUser.isAdmin || req.payload._id === req.params.id)) {
-        return res
-          .status(403)
-          .send(
-            "Unauthorized request - only a user can delete their own account, or an admin can delete any account"
-          );
-      }
+      return res
+        .status(403)
+        .send(
+          "Unauthorized request - only a user can delete their own account, or an admin can delete any account"
+        );
+    }
 
     const product = await User.findByIdAndDelete(req.params.id);
 
