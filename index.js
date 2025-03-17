@@ -11,7 +11,7 @@ const cards = require("./routes/cards");
 // const login=require("./routes/login")
 // const profile=require("./routes/profile")
 const auth = require("./middlewares/auth");
-const { logger, requestTimer }  = require("./middlewares/logger");
+const { logger, requestTimer, errorLogger }  = require("./middlewares/logger");
 const port = process.env.PORT || 5000;
 
 const app = express();
@@ -24,8 +24,9 @@ mongoose
 app.use(cors());
 app.use(express.json());
 
-app.use(requestTimer); // Capture request start time
+app.use(requestTimer); //start time
 app.use(logger);       // Log request details
+app.use(errorLogger);  //error log Bonus 2 task
 
 app.use("/users", users);
 app.use("/cards", cards);
