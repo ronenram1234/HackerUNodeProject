@@ -79,6 +79,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+
 // get all my cards
 router.get("/my-cards", auth, async (req, res) => {
   try {
@@ -152,16 +153,31 @@ router.patch("/:id", auth, async (req, res) => {
 
     if (!card) return res.status(400).send("No cards found");
 
-    // add new like
-    card.likes.push(req.payload._id);
+    // check if this is dislike request
+    const result = card.likes.find((rec) => rec.toString() === req.payload._id.toString()
+    );
+if (result){
+  card.likes = card.likes.filter(
+    (rec) => rec.toString() !== req.payload._id.toString())
+}
+else{
+  card.likes.push(req.payload._id);
+}
 
+    // add new like
+  
+console.log(card)
 
     const updateCard = await Card.findByIdAndUpdate(req.params.id, card, {
       new: true,
     });
 
+    
     return res.status(200).send(updateCard);
   } catch (err) {
+    console.log(err.message)
+    console.log(err)
+    
     res.status(400).send(`Invalide request - ${err.message}`);
   }
 });
