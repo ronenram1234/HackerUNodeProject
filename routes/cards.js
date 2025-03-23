@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const Card = require("../models/Card");
 const bcrypt = require("bcrypt");
-const Joi = require("Joi");
+const Joi = require("joi");
 const auth = require("../middlewares/auth");
 
 // create new card
