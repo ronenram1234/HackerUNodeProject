@@ -1,0 +1,287 @@
+[{
+  "_id": {
+    "$oid": "67d6c06f54c4b927e0db5956"
+  },
+  "title": "Green Energy",
+  "subtitle": "Renewable Energy Solutions",
+  "description": "Providing sustainable energy solutions",
+  "phone": "050-7777777",
+  "email": "contact@greenenergy.com",
+  "web": "https://www.greenenergy.com",
+  "image": {
+    "url": "https://plus.unsplash.com/premium_photo-1678743133487-d501f3b0696b?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "alt": "energy"
+  },
+  "address": {
+    "state": "",
+    "country": "Israel",
+    "city": "Haifa",
+    "street": "Solar Ave",
+    "houseNumber": 3,
+    "zip": "22222"
+  },
+  "likes": [
+    {
+      "$oid": "67d7acd53e8c91a1d4ead9a6"
+    }
+  ],
+  "user_id": {
+    "$oid": "67d7acd53e8c91a1d4ead9a3"
+  },
+  "createdAt": {
+    "$date": "2025-03-16T12:13:35.984Z"
+  },
+  "bizNumber": 150,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d6c07054c4b927e0db5959"
+  },
+  "title": "Foodie Heaven",
+  "subtitle": "Restaurant & Catering",
+  "description": "Fine dining and catering services",
+  "phone": "050-8888888",
+  "email": "reservations@foodieheaven.com",
+  "web": "https://www.foodieheaven.com",
+  "image": {
+    "url": "https://plus.unsplash.com/premium_photo-1673108852141-e8c3c22a4a22?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "alt": "food"
+  },
+  "address": {
+    "state": "",
+    "country": "Israel",
+    "city": "Ashdod",
+    "street": "Yam Street",
+    "houseNumber": 22,
+    "zip": "33333"
+  },
+  "likes": [
+    {
+      "$oid": "67d7acd53e8c91a1d4ead9a0"
+    }
+  ],
+  "user_id": {
+    "$oid": "67d7acd53e8c91a1d4ead9a3"
+  },
+  "createdAt": {
+    "$date": "2025-03-16T12:13:36.317Z"
+  },
+  "bizNumber": 102,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d6c06f54c4b927e0db5953"
+  },
+  "title": "Tech  Solutions",
+  "subtitle": "Software Development",
+  "description": "Custom software solutions for businesses",
+  "phone": "050-6666666",
+  "email": "info@techsolutions.com",
+  "web": "https://www.techsolutions.com",
+  "image": {
+    "url": "https://plus.unsplash.com/premium_photo-1681426687411-21986b0626a8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "alt": "tech"
+  },
+  "address": {
+    "state": "",
+    "country": "Israel",
+    "city": "Ramat Gan",
+    "street": "Hamasger",
+    "houseNumber": 8,
+    "zip": "11111"
+  },
+  "likes": [
+    {
+      "$oid": "67d7acd53e8c91a1d4ead9a6"
+    },
+    {
+      "$oid": "67d7acd53e8c91a1d4ead9a0"
+    }
+  ],
+  "user_id": {
+    "$oid": "67d7acd53e8c91a1d4ead9a3"
+  },
+  "createdAt": {
+    "$date": "2025-03-16T12:13:35.664Z"
+  },
+  "bizNumber": 100,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67da6c3f75db48ef65e0f9a0"
+  },
+  "title": "Green Energy 2",
+  "subtitle": "Renewable Energy Solutions",
+  "description": "Providing sustainable energy solutions",
+  "phone": "050-7777777",
+  "email": "contact@greenenergy.com",
+  "web": "https://www.greenenergy.com",
+  "image": {
+    "url": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "alt": "energy"
+  },
+  "address": {
+    "state": "",
+    "country": "Israel",
+    "city": "Haifa",
+    "street": "Solar Ave",
+    "houseNumber": 3,
+    "zip": "22222"
+  },
+  "likes": [],
+  "user_id": {
+    "$oid": "67d7acd53e8c91a1d4ead9a3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:03:27.035Z"
+  },
+  "bizNumber": 151,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67da6c6975db48ef65e0f9a3"
+  },
+  "title": "Green Energy 3",
+  "subtitle": "Renewable Energy Solutions",
+  "description": "Providing sustainable energy solutions",
+  "phone": "050-7777777",
+  "email": "contact@greenenergy.com",
+  "web": "https://www.greenenergy.com",
+  "image": {
+    "url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "alt": "energy"
+  },
+  "address": {
+    "state": "",
+    "country": "Israel",
+    "city": "Haifa",
+    "street": "Solar Ave",
+    "houseNumber": 3,
+    "zip": "22222"
+  },
+  "likes": [
+    {
+      "$oid": "67d7acd53e8c91a1d4ead9a6"
+    }
+  ],
+  "user_id": {
+    "$oid": "67d7acd53e8c91a1d4ead9a3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:04:09.470Z"
+  },
+  "bizNumber": 152,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67da6c8e75db48ef65e0f9a6"
+  },
+  "title": "Foodie Heaven 2",
+  "subtitle": "Restaurant & Catering",
+  "description": "Fine dining and catering services",
+  "phone": "050-8888888",
+  "email": "reservations@foodieheaven.com",
+  "web": "https://www.foodieheaven.com",
+  "image": {
+    "url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "alt": "food"
+  },
+  "address": {
+    "state": "",
+    "country": "Israel",
+    "city": "Ashdod",
+    "street": "Ha-Gdud ha-Ivri St",
+    "houseNumber": 10,
+    "zip": "7710001"
+  },
+  "likes": [
+    {
+      "$oid": "67d7acd53e8c91a1d4ead9a3"
+    }
+  ],
+  "user_id": {
+    "$oid": "67d7acd53e8c91a1d4ead9a3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:04:46.685Z"
+  },
+  "bizNumber": 153,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67da6dab75db48ef65e0f9b4"
+  },
+  "title": "Foodie Heaven 3",
+  "subtitle": "Restaurant & Catering",
+  "description": "Fine dining and catering services",
+  "phone": "050-8888888",
+  "email": "reservations@foodieheaven.com",
+  "web": "https://www.foodieheaven.com",
+  "image": {
+    "url": "https://images.unsplash.com/photo-1606787366850-de6330128bfc?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "alt": "food"
+  },
+  "address": {
+    "state": "",
+    "country": "Israel",
+    "city": "Ashdod",
+    "street": "Ha-Gdud ha-Ivri St",
+    "houseNumber": 10,
+    "zip": "7710001"
+  },
+  "likes": [
+    {
+      "$oid": "67d7acd53e8c91a1d4ead9a6"
+    }
+  ],
+  "user_id": {
+    "$oid": "67d7acd53e8c91a1d4ead9a3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:09:31.474Z"
+  },
+  "bizNumber": 154,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67da6e0375db48ef65e0f9c7"
+  },
+  "title": "Tech  Solutions 3",
+  "subtitle": "Software Development",
+  "description": "Custom software solutions for businesses",
+  "phone": "050-6666666",
+  "email": "info@techsolutions.com",
+  "web": "https://www.techsolutions.com",
+  "image": {
+    "url": "https://plus.unsplash.com/premium_photo-1661963212517-830bbb7d76fc?q=80&w=1986&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "alt": "tech"
+  },
+  "address": {
+    "state": "",
+    "country": "Israel",
+    "city": "Ramat Gan",
+    "street": "Hamasger",
+    "houseNumber": 8,
+    "zip": "11111"
+  },
+  "likes": [
+    {
+      "$oid": "67d7acd53e8c91a1d4ead9a3"
+    }
+  ],
+  "user_id": {
+    "$oid": "67d7acd53e8c91a1d4ead9a3"
+  },
+  "createdAt": {
+    "$date": "2025-03-19T07:10:59.638Z"
+  },
+  "bizNumber": 155,
+  "__v": 0
+}]
